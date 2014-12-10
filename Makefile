@@ -1,19 +1,24 @@
-PROGRAM=browser
-OBJECTS=browser.o
+PROGRAM := browser
+OBJECTS := browser.o
 
-CC=gcc
-CFLAGS=$(shell pkg-config --cflags gtk+-2.0 webkit-1.0)
-CFLAGS+= -Wall -g
+GTK_VERSION := 3.0
+WEBKITGTK := webkitgtk-3.0
 
-LDFLAGS=$(shell pkg-config --libs gtk+-2.0 webkit-1.0)
+DEPS := gtk+-$(GTK_VERSION) $(WEBKITGTK)
+
+CC      := gcc
+CFLAGS  := $(shell pkg-config --cflags $(DEPS))
+CFLAGS  += -Wall -g -O2
+
+LDFLAGS := $(shell pkg-config --libs $(DEPS))
 
 all: $(PROGRAM)
 
-browser: $(OBJECTS)
-	$(CC) $(OBJECTS) $(LDFLAGS) -o $(PROGRAM)
+$(PROGRAM): $(OBJECTS)
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $(PROGRAM)
 
 clean:
-	rm -rf $(OBJECTS) $(PROGRAM)
+	rm -rf $(PROGRAM) $(OBJECTS)
 	
 %.o : %.c
 	$(CC) $(CFLAGS) -c $<
